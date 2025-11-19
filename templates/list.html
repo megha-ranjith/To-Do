@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% block title %}List View{% endblock %}
+{% block page_title %}Task List{% endblock %}
+
+{% block content %}
+<div class="list-wrapper">
+    {% if tasks %}
+    <table class="tasks-table">
+        <thead>
+            <tr>
+                <th width="5%"></th>
+                <th width="30%">Task</th>
+                <th width="15%">Category</th>
+                <th width="12%">Priority</th>
+                <th width="15%">Assigned</th>
+                <th width="15%">Due Date</th>
+                <th width="8%">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr class="task-row {% if task.completed %}completed{% endif %}" data-task-id="{{ task.id }}">
+                <td>
+                    <input type="checkbox" class="task-toggle" {% if task.completed %}checked{% endif %} data-task-id="{{ task.id }}">
+                </td>
+                <td class="task-title">{{ task.title }}</td>
+                <td><span class="badge badge-category">{{ task.category }}</span></td>
+                <td><span class="badge badge-{{ task.priority }}">{{ task.priority | capitalize }}</span></td>
+                <td>{{ task.assigned_to }}</td>
+                <td>{{ task.due_date or '—' }}</td>
+                <td>
+                    {% if task.completed %}
+                    <span class="status-done">✓ Done</span>
+                    {% else %}
+                    <span class="status-open">◯ Open</span>
+                    {% endif %}
+                </td>
+                <td class="actions">
+                    <button class="btn-icon delete-task" data-task-id="{{ task.id }}" title="Delete">🗑️</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>📭 No tasks yet. Create one to get started!</p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .list-wrapper {
+        padding: 30px;
+    }
+
+    .tasks-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--card-bg);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .tasks-table thead {
+        background: var(--border-color);
+    }
+
+    .tasks-table th {
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--text);
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .tasks-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text);
+    }
+
+    .task-row {
+        transition: background 0.3s ease;
+    }
+
+    .task-row:hover {
+        background: var(--bg);
+    }
+
+    .task-row.completed {
+        opacity: 0.6;
+    }
+
+    .task-row.completed .task-title {
+        text-decoration: line-through;
+    }
+
+    .task-title {
+        font-weight: 500;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .badge-category {
+        background: var(--primary);
+        color: white;
+        opacity: 0.8;
+    }
+
+    .badge-high {
+        background-color: #EF4444;
+        color: white;
+    }
+
+    .badge-medium {
+        background-color: #F59E0B;
+        color: white;
+    }
+
+    .badge-low {
+        background-color: #10B981;
+        color: white;
+    }
+
+    .status-done {
+        color: var(--success);
+        font-weight: 600;
+    }
+
+    .status-open {
+        color: var(--warning);
+        font-weight: 600;
+    }
+
+    .actions {
+        text-align: center;
+    }
+
+    .btn-icon {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+        padding: 5px 10px;
+        transition: transform 0.2s;
+    }
+
+    .btn-icon:hover {
+        transform: scale(1.2);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-muted);
+    }
+</style>
+{% endblock %}

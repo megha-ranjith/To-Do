@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock %} - To-Do List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- SIDEBAR NAVIGATION -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">📋</div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="{{ url_for('dashboard') }}" 
+                   class="nav-item {% if active_tab=='dashboard' %}active{% endif %}" 
+                   data-tooltip="Dashboard">
+                    <span class="icon">📊</span>
+                </a>
+                <a href="{{ url_for('list_view') }}" 
+                   class="nav-item {% if active_tab=='list' %}active{% endif %}" 
+                   data-tooltip="List">
+                    <span class="icon">📝</span>
+                </a>
+                <a href="{{ url_for('kanban') }}" 
+                   class="nav-item {% if active_tab=='kanban' %}active{% endif %}" 
+                   data-tooltip="Kanban">
+                    <span class="icon">📋</span>
+                </a>
+                <a href="{{ url_for('calendar') }}" 
+                   class="nav-item {% if active_tab=='calendar' %}active{% endif %}" 
+                   data-tooltip="Calendar">
+                    <span class="icon">📅</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="theme-toggle" class="sidebar-btn" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <header class="header">
+                <h1>{% block page_title %}My Dashboard{% endblock %}</h1>
+                <div class="header-actions">
+                    <button class="btn-primary" id="add-task-btn">+ Add Task</button>
+                </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <div class="content">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- ADD TASK MODAL -->
+    <div class="modal" id="addTaskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Task</h2>
+                <button class="btn-close" id="closeModal">&times;</button>
+            </div>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="taskTitle">Task Title *</label>
+                    <input type="text" id="taskTitle" name="title" placeholder="What do you need to do?" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="taskDescription">Description</label>
+                    <textarea id="taskDescription" name="description" placeholder="Add details..." rows="3"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskCategory">Category</label>
+                        <select id="taskCategory" name="category">
+                            <option value="General">General</option>
+                            <option value="Work">Work</option>
+                            <option value="Personal">Personal</option>
+                            <option value="Shopping">Shopping</option>
+                            <option value="Health">Health</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskPriority">Priority</label>
+                        <select id="taskPriority" name="priority">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskDueDate">Due Date</label>
+                        <input type="date" id="taskDueDate" name="due_date">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskAssigned">Assigned To</label>
+                        <input type="text" id="taskAssigned" name="assigned_to" placeholder="Your name" value="Me">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

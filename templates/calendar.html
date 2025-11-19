@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% block title %}Calendar{% endblock %}
+{% block page_title %}Calendar{% endblock %}
+
+{% block content %}
+<div class="calendar-wrapper">
+    <h2>Tasks by Due Date</h2>
+    
+    {% if tasks %}
+    <div class="calendar-list">
+        {% for task in tasks | sort(attribute='due_date', reverse=True) %}
+        <div class="calendar-item {% if task.completed %}completed{% endif %}">
+            <div class="date-column">
+                {% if task.due_date %}
+                <div class="date-display">
+                    <span class="date-day">{{ task.due_date.split('-')[2] }}</span>
+                    <span class="date-month">{{ ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][task.due_date.split('-')[1] | int - 1] }}</span>
+                </div>
+                {% else %}
+                <div class="date-display no-date">
+                    <span>—</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="task-column">
+                <h4>{{ task.title }}</h4>
+                <p>{{ task.description or 'No description' }}</p>
+                <div class="task-tags">
+                    <span class="tag category">{{ task.category }}</span>
+                    <span class="tag priority-{{ task.priority }}">{{ task.priority }}</span>
+                    <span class="tag">{{ task.assigned_to }}</span>
+                </div>
+            </div>
+
+            <div class="status-column">
+                {% if task.completed %}
+                <span class="status-badge done">✓ Done</span>
+                {% else %}
+                <span class="status-badge open">◯ Open</span>
+                {% endif %}
+            </div>
+
+            <div class="action-column">
+                <button class="btn-icon delete-task" data-task-id="{{ task.id }}" title="Delete">🗑️</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>📭 No tasks scheduled. Create one to get started!</p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .calendar-wrapper {
+        padding: 30px;
+    }
+
+    .calendar-wrapper h2 {
+        margin-bottom: 25px;
+        color: var(--text);
+    }
+
+    .calendar-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .calendar-item {
+        display: grid;
+        grid-template-columns: 80px 1fr 100px 50px;
+        gap: 20px;
+        align-items: center;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .calendar-item:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transform: translateX(5px);
+    }
+
+    .calendar-item.completed {
+        opacity: 0.6;
+    }
+
+    .date-column {
+        display: flex;
+        justify-content: center;
+    }
+
+    .date-display {
+        background: var(--primary);
+        color: white;
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+        min-width: 70px;
+    }
+
+    .date-display.no-date {
+        background: var(--border-color);
+        color: var(--text-muted);
+    }
+
+    .date-day {
+        display: block;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .date-month {
+        display: block;
+        font-size: 12px;
+        opacity: 0.8;
+    }
+
+    .task-column h4 {
+        margin: 0 0 5px 0;
+        color: var(--text);
+    }
+
+    .task-column p {
+        margin: 0 0 10px 0;
+        color: var(--text-muted);
+        font-size: 14px;
+    }
+
+    .task-tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .tag {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        background: var(--border-color);
+        color: var(--text-muted);
+    }
+
+    .tag.category {
+        background: var(--primary);
+        color: white;
+        opacity: 0.8;
+    }
+
+    .tag.priority-high {
+        background: #EF4444;
+        color: white;
+    }
+
+    .tag.priority-medium {
+        background: #F59E0B;
+        color: white;
+    }
+
+    .tag.priority-low {
+        background: #10B981;
+        color: white;
+    }
+
+    .status-column {
+        text-align: center;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status-badge.done {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success);
+    }
+
+    .status-badge.open {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning);
+    }
+
+    .action-column {
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        .calendar-item {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+    }
+</style>
+{% endblock %}

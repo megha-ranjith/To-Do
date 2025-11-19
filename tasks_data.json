@@ -1,0 +1,20 @@
+{
+  "tasks": [
+    {
+      "id": "a580c0f4-5cf0-424b-a220-540a26797060",
+      "title": "ppt prep",
+      "description": "adbm ppt prep",
+      "category": "General",
+      "priority": "medium",
+      "due_date": "2025-11-19",
+      "completed": true,
+      "assigned_to": "Megha",
+      "created_at": "2025-11-18T01:26:54.977761",
+      "tags": []
+    }
+  ],
+  "settings": {
+    "theme": "dark",
+    "view_mode": "dashboard"
+  }
+}
